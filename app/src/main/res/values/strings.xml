@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="entry">ENTRAR</string>
+    <string name="back">VOLVER</string>
+    <string name="animal_recognition">RECONOCIMIENTO ESPECIES</string>
+    <string name="session">REGISTRO/INICIO SESION</string>
+    <string name="warning">Esta parte de la app se encuentra en desarrollo y
+    se encontrará disponible en futuras versiones. Muchas gracias y disculpe
+    las molestias.</string>
+    <string name="indicationA">-Indicacion primera</string>
+    <string name="indicationB">-Indicacion segunda</string>
+    <string name="indicationC">-Indicacion tercera</string>
+    <string name="camera">ACCESO CAMARA</string>
+</resources>
