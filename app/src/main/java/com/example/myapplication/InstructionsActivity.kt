@@ -1,29 +1,38 @@
 package com.example.myapplication
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Bitmap
-import android.provider.MediaStore
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.Toast
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class InstructionsActivity : AppCompactActivity() {
 
-    private lateinit var interpreter: Interpreter
-    private val inputImageSize = 180  // Asumiendo que el modelo espera imágenes de 180x180
-    private val numChannels = 3       // Asumiendo que el modelo trabaja con imágenes en color (RGB)
-    private val numClasses = 5        // Ajustar al número real de clases en tu modelo
-
+    private val cameraRequestCode = 100
+    private lateinit var imageView: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_instructions_camera)
 
-        // Cargar el modelo TFLite
-        interpreter = Interpreter(loadModelFile())
+        val accessCameraButton: Button = findViewById(R.id.access_camera)
+        imageView = findViewById(R.id.imageView)
 
-        // El resto de tu código para los botones (back y cámara) permanece igual
+        accessCameraButton.setOnClickListener {
+            openCamera()
+        }
+
     }
+
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(intent, cameraRequestCode)
+    }
+
 
     // Cargar el modelo desde la carpeta assets
     private fun loadModelFile(): ByteBuffer {

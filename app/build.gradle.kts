@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.AaptOptions
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -30,6 +32,16 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+
+    androidResources {
+        noCompress
+        "tflite"
+        noCompress
+        "lite"
+    }
+
+
 }
 
 dependencies {
