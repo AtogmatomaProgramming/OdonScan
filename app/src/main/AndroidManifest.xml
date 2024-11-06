@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permiso para usar la cámara -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- Permiso para escribir en el almacenamiento externo (opcional, si necesitas guardar imágenes) -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- Permiso para leer del almacenamiento externo (opcional, si necesitas acceder a imágenes guardadas) -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Permiso para escribir en el almacenamiento externo (opcional, si necesitas guardar imágenes) -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Permiso para leer del almacenamiento externo (opcional, si necesitas acceder a imágenes guardadas) -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <!-- Indicar que la aplicación usa la cámara -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- Indicar que la aplicación usa la cámara -->
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
 
     <application
         android:allowBackup="true"
@@ -26,6 +19,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
+        <activity
+            android:name=".AccessCamera"
+            android:exported="false"
+            android:label="@string/title_activity_access_camera"
+            android:theme="@style/Theme.MyApplication" />
         <activity
             android:name=".InstructionsActivity"
             android:exported="false" />

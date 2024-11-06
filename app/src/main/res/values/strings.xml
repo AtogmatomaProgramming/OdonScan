@@ -11,4 +11,5 @@
     <string name="indicationB">-Indicacion segunda</string>
     <string name="indicationC">-Indicacion tercera</string>
     <string name="camera">ACCESO CAMARA</string>
+    <string name="title_activity_access_camera">AccessCamera</string>
 </resources>
