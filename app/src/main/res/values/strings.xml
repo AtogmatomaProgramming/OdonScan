@@ -2,14 +2,19 @@
     <string name="app_name">My Application</string>
     <string name="entry">ENTRAR</string>
     <string name="back">VOLVER</string>
+    <string name="more">MÁS...</string>
     <string name="animal_recognition">RECONOCIMIENTO ESPECIES</string>
     <string name="session">REGISTRO/INICIO SESION</string>
-    <string name="warning">Esta parte de la app se encuentra en desarrollo y
-    se encontrará disponible en futuras versiones. Muchas gracias y disculpe
-    las molestias.</string>
-    <string name="indicationA">-Indicacion primera</string>
-    <string name="indicationB">-Indicacion segunda</string>
-    <string name="indicationC">-Indicacion tercera</string>
+    <string name="warning">En desarrollo. No disponible en la versión actual.
+    Disculpen las molestias</string>
+    <string name="wrong">Lo sentimos, no hemos podido identificar la especie...</string>
+    <string name="Considerations">Antes de fotografíar a la especie, tenga en cuenta los
+        siguientes aspectos:</string>
+    <string name="indicationA">-Intente que solo aparezca la especie a indentificar</string>
+    <string name="indicationB">-Intente que la imagen abarque a todo el pez</string>
+    <string name="indicationC">-Intente que solo haya un individuo</string>
     <string name="camera">ACCESO CAMARA</string>
     <string name="title_activity_access_camera">AccessCamera</string>
+    <string name="title_activity_more">MoreActivity</string>
+    <string name="title_activity_wrong_id">WrongID</string>
 </resources>

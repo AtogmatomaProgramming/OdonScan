@@ -3,149 +3,115 @@ package com.example.myapplication
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
+import org.tensorflow.lite
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.support.common.FileUtil
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
-@Suppress("DEPRECATION")
 class InstructionsActivity : AppCompatActivity() {
 
-    private lateinit var tflite: Interpreter
-    private lateinit var database: DatabaseReference
-    private val speciesLabels = mutableMapOf<Int, String>()  // Mapear índice a nombre de especie
-
-    private val imgHeight = 180
-    private val imgWidth = 180
-    private val numSpecies = 100  // Ajusta según el número de especies en tu modelo
+    private val REQUEST_IMAGE_CAPTURE = 1 // Código para la solicitud de la cámara
+    private lateinit var imageView: ImageView
+    private lateinit var cameraButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_instructions_camera)
+        setContentView(R.layout.activity_main)
 
-        // Inicializar el botón de cámara
-        val cameraButton = findViewById<Button>(R.id.access_camera)
+        imageView = findViewById(R.id.imageView)
+        cameraButton = findViewById(R.id.access_camera)
+
         cameraButton.setOnClickListener {
-            openCamera()
-        }
-
-        // Inicializar Firebase y cargar etiquetas desde JSON
-        database = FirebaseDatabase.getInstance().reference
-        loadSpeciesLabelsFromFirebase()
-
-        // Cargar el modelo TFLite
-        val modelFile = FileUtil.loadMappedFile(this, "modelo_beta.tflite")
-        tflite = Interpreter(modelFile)
-
-        //Boton de regreso
-        val btn: Button = findViewById(R.id.back_camera)
-        btn.setOnClickListener {
-
-            val intent: Intent = Intent(this, SecondActivity::class.java)
-            startActivity(intent)
-
+            dispatchTakePictureIntent()
         }
     }
 
-    private fun openCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+    // Intent para abrir la cámara
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
     }
 
+    // Procesar la imagen cuando la cámara devuelve el resultado
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // Obtener la imagen capturada
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            classifyImage(imageBitmap)
-        }
-    }
+            imageView.setImageBitmap(imageBitmap)
 
-    private fun classifyImage(bitmap: Bitmap) {
-        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, imgWidth, imgHeight, true)
-        val inputArray = convertBitmapToInputArray(resizedBitmap)
-        val outputArray = Array(1) { FloatArray(numSpecies) }
+            // Preprocesar la imagen y pasarla al modelo para hacer la predicción
+            val processedBitmap = preprocessImage(imageBitmap)
+            val predictedClass = runModelInference(processedBitmap)
 
-        tflite.run(inputArray, outputArray)
-
-        // Obtener el índice de la especie predicha
-        val speciesIndex = outputArray[0].indexOfMaxOrNull() ?: -1
-        val speciesName = speciesLabels[speciesIndex] ?: "Especie desconocida"
-
-        // Buscar datos en Firebase usando el nombre de la especie
-        fetchSpeciesData(speciesName)
-    }
-
-    private fun convertBitmapToInputArray(bitmap: Bitmap): Array<Array<Array<FloatArray>>> {
-        val input = Array(1) { Array(imgHeight) { Array(imgWidth) { FloatArray(3) } } }
-        for (x in 0 until imgWidth) {
-            for (y in 0 until imgHeight) {
-                val pixel = bitmap.getPixel(x, y)
-                input[0][x][y][0] = (pixel shr 16 and 0xFF) / 255.0f  // R
-                input[0][x][y][1] = (pixel shr 8 and 0xFF) / 255.0f   // G
-                input[0][x][y][2] = (pixel and 0xFF) / 255.0f         // B
-            }
-        }
-        return input
-    }
-
-    private fun fetchSpeciesData(speciesName: String) {
-        val speciesRef = database.child("species").child(speciesName)
-        speciesRef.get().addOnSuccessListener { dataSnapshot ->
-            if (dataSnapshot.exists()) {
-                val speciesInfo = dataSnapshot.value.toString()
-                displaySpeciesInfo(speciesName, speciesInfo)
+            // Si la predicción es válida, mostrar la información desde Firebase
+            if (predictedClass >= 0) {
+                val intent = Intent(this, SpeciesInfoActivity::class.java)
+                intent.putExtra("predicted_class", predictedClass)
+                startActivity(intent)
             } else {
-                Toast.makeText(this, "Datos no encontrados para $speciesName", Toast.LENGTH_SHORT).show()
+                // Si no se reconoce la especie, mostrar la pantalla de error
+                val intent = Intent(this, WrongID::class.java)
+                startActivity(intent)
             }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Error al obtener los datos", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun displaySpeciesInfo(speciesName: String, speciesInfo: String) {
-        // Aquí navegas o muestras la información de la especie
-        Toast.makeText(this, "Especie: $speciesName\nInfo: $speciesInfo", Toast.LENGTH_LONG).show()
+    // Preprocesar la imagen para el modelo
+    private fun preprocessImage(originalImage: Bitmap): Bitmap {
+        return Bitmap.createScaledBitmap(originalImage, 224, 224, true)  // Ajusta según el tamaño esperado
     }
 
-    private fun loadSpeciesLabelsFromFirebase() {
-        // Descargar el archivo JSON desde Firebase o cargar las etiquetas en speciesLabels
-        val speciesRef = database.child("species_labels")
-        speciesRef.get().addOnSuccessListener { dataSnapshot ->
-            if (dataSnapshot.exists()) {
-                for (speciesEntry in dataSnapshot.children) {
-                    val code = speciesEntry.key?.toIntOrNull()
-                    val name = speciesEntry.value?.toString()
-                    if (code != null && name != null) {
-                        speciesLabels[code] = name
-                    }
-                }
-            } else {
-                Toast.makeText(this, "No se encontraron etiquetas de especies", Toast.LENGTH_SHORT).show()
+    // Ejecutar la inferencia del modelo
+    private fun runModelInference(bitmap: Bitmap): Int {
+        val input = convertBitmapToByteBuffer(bitmap)
+
+        // Obtener dinámicamente el número de clases desde el modelo
+        val numClasses = tflite.outputTensor(0).shape()[1]
+        val output = Array(1) { FloatArray(numClasses) }
+
+        // Ejecutar la inferencia
+        tflite.run(input, output)
+
+        // Encontrar la clase con mayor probabilidad
+        var predictedClass = -1
+        var maxProbability = -1f
+
+        for (i in output[0].indices) {
+            if (output[0][i] > maxProbability) {
+                maxProbability = output[0][i]
+                predictedClass = i
             }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Error al cargar etiquetas de especies", Toast.LENGTH_SHORT).show()
         }
+
+        // Retornar la clase predicha si supera un umbral de confianza
+        return if (maxProbability > 0.5) predictedClass else -1
     }
 
-    companion object {
-        const val REQUEST_IMAGE_CAPTURE = 1
+
+    // Convertir la imagen a ByteBuffer para la entrada del modelo
+    private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer {
+        val byteBuffer = ByteBuffer.allocateDirect(4 * 224 * 224 * 3)
+        byteBuffer.order(ByteOrder.nativeOrder())
+
+        val intValues = IntArray(224 * 224)
+        bitmap.getPixels(intValues, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+
+        var pixel = 0
+        for (i in 0 until 224) {
+            for (j in 0 until 224) {
+                val value = intValues[pixel++]
+                byteBuffer.putFloat(((value shr 16) and 0xFF) / 255.0f)  // Rojo
+                byteBuffer.putFloat(((value shr 8) and 0xFF) / 255.0f)   // Verde
+                byteBuffer.putFloat((value and 0xFF) / 255.0f)          // Azul
+            }
+        }
+        return byteBuffer
     }
 }
 
-// Extensión para obtener el índice del valor máximo en un Array<Float>
-fun FloatArray.indexOfMaxOrNull(): Int? {
-    if (isEmpty()) return null
-    var maxIndex = 0
-    var maxValue = this[0]
-    for (i in 1 until size) {
-        if (this[i] > maxValue) {
-            maxIndex = i
-            maxValue = this[i]
-        }
-    }
-    return maxIndex
-}
