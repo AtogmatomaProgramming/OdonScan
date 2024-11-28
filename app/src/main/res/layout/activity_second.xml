@@ -9,26 +9,51 @@
 
     <ImageView
         android:id="@+id/peje_acceso"
-        android:layout_width="217dp"
-        android:layout_height="101dp"
+        android:layout_width="155dp"
+        android:layout_height="66dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.096"
+        app:layout_constraintVertical_bias="0.135"
         app:srcCompat="@drawable/logo_aes_fish_fish" />
 
     <ImageView
         android:id="@+id/user"
-        android:layout_width="180dp"
-        android:layout_height="93dp"
+        android:layout_width="222dp"
+        android:layout_height="137dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.373"
-        app:srcCompat="@drawable/usuario" />
+        app:layout_constraintVertical_bias="0.398"
+        app:srcCompat="@drawable/logo_log" />
+
+    <ImageView
+        android:id="@+id/more_image"
+        android:layout_width="204dp"
+        android:layout_height="110dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.728"
+        app:srcCompat="@drawable/logo_barco" />
+
+    <ImageView
+        android:id="@+id/phone_logo"
+        android:layout_width="287dp"
+        android:layout_height="182dp"
+        android:rotation="90"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.049"
+        app:srcCompat="@drawable/logo_phone" />
 
     <Button
         android:id="@+id/reconocimiento"
@@ -41,7 +66,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.237" />
+        app:layout_constraintVertical_bias="0.267" />
 
     <Button
         android:id="@+id/inicio_sesion"
@@ -52,10 +77,9 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintVertical_bias="0.531" />
 
     <Button
         android:id="@+id/more"
@@ -69,6 +93,6 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.761" />
+        app:layout_constraintVertical_bias="0.847" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
