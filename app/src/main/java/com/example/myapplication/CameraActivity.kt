@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.support.common.FileUtil
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -27,7 +28,6 @@ import java.nio.ByteOrder
 class CameraActivity : ComponentActivity() {
 
     private lateinit var interpreter: Interpreter
-    private lateinit var resultTextView: TextView
     private lateinit var capturedImageView: ImageView
     private val cameraRequestCode = 1001  // Código para identificar la solicitud de cámara
 
@@ -36,7 +36,6 @@ class CameraActivity : ComponentActivity() {
         setContentView(R.layout.activity_camera)
 
         capturedImageView = findViewById(R.id.capturedImage)
-        resultTextView = findViewById(R.id.resultText)  // Asegúrate de tener un TextView para mostrar los resultados
         val captureButton: Button = findViewById(R.id.capture_button)
 
         //Cargar Modelo
@@ -50,11 +49,12 @@ class CameraActivity : ComponentActivity() {
 
     // Cargar el modelo TensorFlow Lite
     private fun loadModel() {
-        val model = assets.open("modelo_gamma.tflite").use {
-            it.readBytes()
-        }
-        interpreter = Interpreter(model)
+        // Cargar el modelo desde la carpeta "assets"
+        val modelFile = FileUtil.loadMappedFile(this, "modelo_gamma.tflite")
+        interpreter = Interpreter(modelFile)
     }
+
+
 
     // Función para abrir la cámara
     private fun openCamera() {
@@ -86,7 +86,7 @@ class CameraActivity : ComponentActivity() {
         val byteBuffer = convertBitmapToByteBuffer(resizedImage)
 
         // Crear un TensorBuffer de salida para la predicción
-        val outputBuffer = TensorBuffer.createFixedSize(intArrayOf(1, 2), DataType.FLOAT32)  // Ajusta según el modelo
+        val outputBuffer = TensorBuffer.createFixedSize(intArrayOf(1, 3), DataType.FLOAT32)  // Ajusta según el modelo
 
         // Ejecutar la inferencia
         interpreter.run(byteBuffer, outputBuffer.buffer.rewind())
@@ -97,11 +97,17 @@ class CameraActivity : ComponentActivity() {
         // Obtener el índice de la clase con la mayor confianza
         val maxConfidenceIndex = confidences.indices.maxByOrNull { confidences[it] } ?: -1
 
-        // Mostrar el resultado
         if (maxConfidenceIndex != -1) {
-            resultTextView.text = "Especie: ${getSpeciesName(maxConfidenceIndex)} (Confianza: ${confidences[maxConfidenceIndex]})"
+            val speciesName = getSpeciesName(maxConfidenceIndex)
+
+            if (speciesName == "elemento_desconocido") {
+                navigateToWrongID()
+            } else {
+                navigateToCorrectID(speciesName)
+            }
         } else {
-            resultTextView.text = "Problema al identificar la espece"
+            // Manejo de caso excepcional (esto no debería suceder con un modelo correctamente configurado)
+            navigateToWrongID()
         }
     }
 
@@ -123,11 +129,22 @@ class CameraActivity : ComponentActivity() {
 
     // Función para obtener el nombre de la especie basado en el índice de la predicción
     private fun getSpeciesName(index: Int): String {
-        val speciesList = listOf("elemento_desconocido","lepidorhombus_whiffiagonis", "micromessitus_poutassou")
-        return speciesList.getOrNull(index) ?: "Desconocido"
+        val speciesList = listOf("elemento_desconocido", "lepidorhombus_whiffiagonis", "micromesistius_poutassou")
+        return speciesList.getOrNull(index) ?: "elemento_desconocido"
     }
 
+    // Redirigir a WrongID
+    private fun navigateToWrongID() {
+        val intent = Intent(this, WrongID::class.java)
+        startActivity(intent)
+    }
 
+    // Redirigir a CorrectID
+    private fun navigateToCorrectID(speciesName: String) {
+        val intent = Intent(this, CorrectID::class.java)
+        intent.putExtra("SPECIES_TAG", speciesName)
+        startActivity(intent)
+    }
 
 }
 
