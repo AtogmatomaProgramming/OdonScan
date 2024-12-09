@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "498222139954",
+    "project_id": "version01sapo",
+    "storage_bucket": "version01sapo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498222139954:android:57cd107a3e25dcba4e8a2b",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArsLd_RbMeQcwi0qzLjGxjnD6ApxBXgn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
