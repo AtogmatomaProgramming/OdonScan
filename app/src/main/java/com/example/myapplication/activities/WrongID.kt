@@ -1,9 +1,9 @@
-package com.example.myapplication
+package com.example.myapplication.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myapplication.R
 
 class WrongID: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,10 +13,15 @@ class WrongID: AppCompatActivity() {
         val btn: Button = findViewById(R.id.back)
         btn.setOnClickListener {
 
-            val intent: Intent = Intent(this, SecondActivity::class.java)
-            startActivity(intent)
+            finish()
 
         }
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        // Aquí también podrías añadir lógica adicional si es necesario
+        finish()  // Esto finalizará la actividad al presionar el botón "Atrás"
     }
 }

@@ -1,14 +1,14 @@
-package com.example.myapplication
+package com.example.myapplication.activities
 
 import com.bumptech.glide.Glide
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import com.example.myapplication.R
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
@@ -84,6 +84,12 @@ class CorrectID : ComponentActivity() {
             }
 
         })
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        // Aquí también podrías añadir lógica adicional si es necesario
+        finish()  // Esto finalizará la actividad al presionar el botón "Atrás"
     }
 
 

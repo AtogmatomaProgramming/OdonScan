@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:screenOrientation">portrait</item>
+        <item name="buttonStyle">@style/CustomButtonStyle</item>
+    </style>
+
+    <!-- Estilo personalizado para los botones -->
+    <style name="CustomButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/boton_shape</item> <!-- Fondo ovalado -->
+        <item name="android:textColor">@android:color/white</item> <!-- Color del texto -->
+        <item name="android:padding">12dp</item> <!-- Espaciado interno -->
+        <item name="android:layout_margin">8dp</item> <!-- Margen externo -->
+    </style>
+
+
+</resources>

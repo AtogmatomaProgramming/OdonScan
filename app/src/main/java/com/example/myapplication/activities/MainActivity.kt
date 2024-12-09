@@ -1,12 +1,10 @@
-package com.example.myapplication
+package com.example.myapplication.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowManager
-import android.view.animation.Animation
 import android.widget.Button
-import android.widget.ImageView
+import com.example.myapplication.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
