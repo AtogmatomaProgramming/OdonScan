@@ -8,9 +8,9 @@ import com.example.myapplication.R
 class WrongID: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_obras)
+        setContentView(R.layout.activity_wrong)
 
-        val btn: Button = findViewById(R.id.back)
+        val btn: Button = findViewById(R.id.back_wrong_id)
         btn.setOnClickListener {
 
             finish()

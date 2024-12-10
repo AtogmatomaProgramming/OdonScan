@@ -19,7 +19,10 @@ class ImageProcessor(private val interpreter: Interpreter, private val context: 
     // Método para procesar la imagen y devolver el resultado
     fun processImage(imageUri: Uri) {
         // Convertir la URI de la imagen en un Bitmap
+        Log.d("Debug", "Entrando en processImage() con URI: $imageUri")
+
         val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+        Log.d("Debug", "Imagen convertida a Bitmap")
 
         // Redimensionar la imagen a las dimensiones que requiere el modelo
         val resizedImage = Bitmap.createScaledBitmap(bitmap, 224, 224, true)
@@ -35,20 +38,25 @@ class ImageProcessor(private val interpreter: Interpreter, private val context: 
 
         // Obtener las probabilidades de clasificación
         val confidences = outputBuffer.floatArray
+        Log.d("Debug", "Confidences obtenidas: ${confidences.joinToString(", ")}")
 
         // Obtener el índice de la clase con la mayor confianza
         val maxConfidenceIndex = confidences.indices.maxByOrNull { confidences[it] } ?: -1
+        Log.d("Debug", "Índice con mayor confianza: $maxConfidenceIndex")
 
         if (maxConfidenceIndex != -1) {
             val speciesName = getSpeciesName(maxConfidenceIndex)
+            Log.d("Debug", "Nombre de la especie: $speciesName")
 
             if (speciesName == "elemento_desconocido") {
+                Log.d("Debug", "Especie desconocida, navegando a WrongID")
                 navigateToWrongID()
             } else {
+                Log.d("Debug", "Especie reconocida: $speciesName, navegando a CorrectID")
                 navigateToCorrectID(speciesName)
             }
         } else {
-            // Manejo de caso excepcional
+            Log.e("Debug", "Error: No se encontró un índice válido")
             navigateToWrongID()
         }
     }

@@ -1,6 +1,7 @@
 package com.example.myapplication.activities
 
 
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -15,7 +16,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import android.net.Uri
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import com.example.myapplication.R
 import com.example.myapplication.processing.ImageProcessor
 import org.tensorflow.lite.Interpreter
@@ -26,6 +29,7 @@ import org.tensorflow.lite.support.common.FileUtil
 class InstructionsActivity : AppCompatActivity() {
 
     private lateinit var interpreter: Interpreter
+    private lateinit var photoUri: Uri
     private val CAMERA_PERMISSION_REQUEST_CODE = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,69 +74,86 @@ class InstructionsActivity : AppCompatActivity() {
     // Solicitar el permiso de la cámara si no está concedido
     private fun requestCameraPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
-            // Mostrar una explicación al usuario de por qué se necesita el permiso
             AlertDialog.Builder(this)
-                .setMessage("Esta aplicación necesita acceso a la cámara para tomar fotos.")
+                .setMessage("Para usar la cámara y tomar fotos, la aplicación necesita acceso. ¿Deseas permitirlo?")
                 .setPositiveButton("Aceptar") { _, _ ->
-                    ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(android.Manifest.permission.CAMERA),
+                        CAMERA_PERMISSION_REQUEST_CODE
+                    )
                 }
                 .setNegativeButton("Cancelar", null)
                 .create()
                 .show()
         } else {
-            // Solicitar permiso directamente si nunca se ha solicitado
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_REQUEST_CODE
+            )
         }
     }
 
-    // Manejar la respuesta del usuario a la solicitud de permisos
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso concedido, abrir la cámara
-                openCamera()
+                Toast.makeText(this, "Permiso de cámara concedido.", Toast.LENGTH_SHORT).show()
             } else {
-                // Permiso denegado, mostrar mensaje
-                Toast.makeText(this, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Permiso de cámara denegado.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+
     private fun openCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(intent, CAMERA_REQUEST_CODE)
-        }
+        val photoFile = File(externalCacheDir, "photo_${System.currentTimeMillis()}.jpg")
+        photoUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
+
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
     }
 
     // Manejar el resultado de la cámara
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d("Debug", "onActivityResult() -> requestCode: $requestCode, resultCode: $resultCode")
 
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
-            // Obtener el bitmap de la imagen tomada
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-
-            // Guardar la imagen temporalmente y procesarla con la IA
-            saveImageAndProcess(imageBitmap)
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Log.d("Debug", "Intent data: $data")
+                if (::photoUri.isInitialized) {
+                    Log.d("Debug", "URI válida: $photoUri")
+                    saveImageAndProcess(MediaStore.Images.Media.getBitmap(contentResolver, photoUri))
+                } else {
+                    Log.e("Debug", "Error: No se recibió URI válida")
+                }
+            } else {
+                Log.e("Debug", "Error: Resultado inválido")
+            }
         }
     }
 
     private fun saveImageAndProcess(bitmap: Bitmap) {
         try {
             // Guardar la imagen como archivo temporal
+            Log.d("Debug", "Entrando en saveImageAndProcess()")
             val file = File(externalCacheDir, "photo_${System.currentTimeMillis()}.jpg")
             val fos = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
             fos.flush()
             fos.close()
 
+            Log.d("Debug", "Imagen guardada correctamente en: ${file.absolutePath}")
             // Aquí delegamos el procesamiento de la imagen a la clase ImageProcessor
             val imageProcessor = ImageProcessor(interpreter, this)
             imageProcessor.processImage(Uri.fromFile(file))
+            Log.d("Debug", "Imagen enviada a processImage()")
 
         } catch (e: IOException) {
+            Log.e("Debug", "Error al guardar la imagen: ${e.message}")
             e.printStackTrace()
             Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show()
         }
