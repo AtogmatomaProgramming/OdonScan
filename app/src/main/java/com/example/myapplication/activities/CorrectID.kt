@@ -2,6 +2,7 @@ package com.example.myapplication.activities
 
 import com.bumptech.glide.Glide
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
@@ -40,6 +41,7 @@ class CorrectID : ComponentActivity() {
 
         // Obtén la etiqueta desde el intent
         val speciesTag = intent.getStringExtra("SPECIES_TAG")
+        Log.d("CorrectID", "Species Tag: $speciesTag")
 
         // Inicializa Firebase Database
         database = FirebaseDatabase.getInstance().getReference("marine_species")
@@ -66,7 +68,11 @@ class CorrectID : ComponentActivity() {
                     val similar = snapshot.child("similar").getValue(String::class.java)
 
                     // Actualiza la UI con los datos obtenidos
-                    Glide.with(this@CorrectID).load(imageUrl).into(speciesImage)
+                    if (!imageUrl.isNullOrEmpty()) {
+                        Glide.with(this@CorrectID).load(imageUrl).into(speciesImage)
+                    } else {
+                        speciesImage.setImageResource(R.drawable.image_not_found)  // Imagen de marcador de posición
+                    }
 
                     speciesCName.text = "Nombre Científico: ${c_name ?: "Desconocido"}"
                     speciesVName.text = "Nombre Vernáculo: ${v_name ?: "Desconocido"}"

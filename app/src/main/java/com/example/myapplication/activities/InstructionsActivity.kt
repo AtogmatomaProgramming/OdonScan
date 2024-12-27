@@ -31,6 +31,7 @@ class InstructionsActivity : AppCompatActivity() {
     private lateinit var interpreter: Interpreter
     private lateinit var photoUri: Uri
     private val CAMERA_PERMISSION_REQUEST_CODE = 101
+    private val GALLERY_REQUEST_CODE = 102
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,20 +40,13 @@ class InstructionsActivity : AppCompatActivity() {
         // Botón para acceder a la cámara
         val accessCameraButton: Button = findViewById(R.id.access_camera)
         accessCameraButton.setOnClickListener {
-            // Verificar permisos y abrir la cámara
-            if (isCameraPermissionGranted()) {
-                openCamera()
-            } else {
-                requestCameraPermission()
-            }
+            showImageSourceDialog()  // Muestra el diálogo para elegir entre cámara o galería
         }
 
         // Botón de retroceso
         val backButton: Button = findViewById(R.id.back_camera)
         backButton.setOnClickListener {
-
             finish()
-
         }
         // Cargar Modelo
         loadModel()
@@ -62,6 +56,20 @@ class InstructionsActivity : AppCompatActivity() {
         // Cargar el modelo desde la carpeta "assets"
         val modelFile = FileUtil.loadMappedFile(this, "modelo_iota.tflite")
         interpreter = Interpreter(modelFile)
+    }
+
+    // Mostrar el diálogo para elegir entre la cámara o la galería
+    private fun showImageSourceDialog() {
+        val options = arrayOf("Tomar foto", "Seleccionar de la galería")
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Seleccionar origen de la imagen")
+        builder.setItems(options) { dialog, which ->
+            when (which) {
+                0 -> openCamera()  // Opción para tomar una foto con la cámara
+                1 -> openGallery() // Opción para seleccionar una imagen de la galería
+            }
+        }
+        builder.show()
     }
 
     // Verificar si el permiso de cámara está concedido
@@ -108,12 +116,22 @@ class InstructionsActivity : AppCompatActivity() {
 
 
     private fun openCamera() {
-        val photoFile = File(externalCacheDir, "photo_${System.currentTimeMillis()}.jpg")
-        photoUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
+        if (isCameraPermissionGranted()) {
+            val photoFile = File(externalCacheDir, "photo_${System.currentTimeMillis()}.jpg")
+            photoUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
 
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
+        } else {
+            requestCameraPermission()
+        }
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        intent.type = "image/*"
+        startActivityForResult(intent, GALLERY_REQUEST_CODE)
     }
 
     // Manejar el resultado de la cámara
@@ -121,17 +139,19 @@ class InstructionsActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("Debug", "onActivityResult() -> requestCode: $requestCode, resultCode: $resultCode")
 
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Log.d("Debug", "Intent data: $data")
-                if (::photoUri.isInitialized) {
-                    Log.d("Debug", "URI válida: $photoUri")
-                    saveImageAndProcess(MediaStore.Images.Media.getBitmap(contentResolver, photoUri))
-                } else {
-                    Log.e("Debug", "Error: No se recibió URI válida")
+        when (requestCode) {
+            CAMERA_REQUEST_CODE -> {
+                if (resultCode == RESULT_OK && ::photoUri.isInitialized) {
+                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, photoUri)
+                    saveImageAndProcess(bitmap)
                 }
-            } else {
-                Log.e("Debug", "Error: Resultado inválido")
+            }
+            GALLERY_REQUEST_CODE -> {
+                if (resultCode == RESULT_OK && data != null) {
+                    val selectedImageUri = data.data
+                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImageUri)
+                    saveImageAndProcess(bitmap)
+                }
             }
         }
     }
@@ -161,6 +181,7 @@ class InstructionsActivity : AppCompatActivity() {
 
     companion object {
         private const val CAMERA_REQUEST_CODE = 100
+        private const val GALLERY_REQUEST_CODE = 102
     }
 
     override fun onBackPressed() {
