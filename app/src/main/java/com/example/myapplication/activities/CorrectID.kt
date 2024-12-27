@@ -68,13 +68,13 @@ class CorrectID : ComponentActivity() {
                     // Actualiza la UI con los datos obtenidos
                     Glide.with(this@CorrectID).load(imageUrl).into(speciesImage)
 
-                    speciesCName.text = "Nombre Científico: $c_name"
-                    speciesVName.text = "Nombre Vernáculo: $v_name"
-                    speciesDescription.text = "Descripción: $description"
-                    speciesFaoCode.text = "Código FAO: $fao_code"
-                    speciesGeoDist.text = "Distribución Geográfica: $geo_dist"
-                    speciesSize.text = "Tamaño Promedio: $size"
-                    speciesSimilar.text = "Especies Similares: $similar"
+                    speciesCName.text = "Nombre Científico: ${c_name ?: "Desconocido"}"
+                    speciesVName.text = "Nombre Vernáculo: ${v_name ?: "Desconocido"}"
+                    speciesDescription.text = "Descripción: ${description ?: "No disponible"}"
+                    speciesFaoCode.text = "Código FAO: ${fao_code ?: "No disponible"}"
+                    speciesGeoDist.text = "Distribución Geográfica: ${geo_dist ?: "No especificada"}"
+                    speciesSize.text = "Tamaño Promedio: ${size ?: "No disponible"}"
+                    speciesSimilar.text = "Especies Similares: ${similar ?: "Ninguna"}"
 
             }
 

@@ -25,7 +25,7 @@ class ImageProcessor(private val interpreter: Interpreter, private val context: 
         Log.d("Debug", "Imagen convertida a Bitmap")
 
         // Redimensionar la imagen a las dimensiones que requiere el modelo
-        val resizedImage = Bitmap.createScaledBitmap(bitmap, 224, 224, true)
+        val resizedImage = Bitmap.createScaledBitmap(bitmap, 256, 256, true)
 
         // Convertir la imagen en un ByteBuffer que TensorFlow Lite pueda procesar
         val byteBuffer = convertBitmapToByteBuffer(resizedImage)
@@ -62,11 +62,11 @@ class ImageProcessor(private val interpreter: Interpreter, private val context: 
     }
 
     private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer {
-        val buffer = ByteBuffer.allocateDirect(4 * 224 * 224 * 3)  // Imagen RGB 224x224
+        val buffer = ByteBuffer.allocateDirect(4 * 256 * 256 * 3)  // Imagen RGB 224x224
         buffer.order(ByteOrder.nativeOrder())
 
-        val intValues = IntArray(224 * 224)
-        bitmap.getPixels(intValues, 0, 224, 0, 0, 224, 224)
+        val intValues = IntArray(256 * 256)
+        bitmap.getPixels(intValues, 0, 256, 0, 0, 256, 256)
 
         for (pixelValue in intValues) {
             buffer.putFloat(((pixelValue shr 16) and 0xFF) / 255.0f)  // Red

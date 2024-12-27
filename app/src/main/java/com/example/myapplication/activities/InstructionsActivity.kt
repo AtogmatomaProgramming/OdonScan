@@ -60,7 +60,7 @@ class InstructionsActivity : AppCompatActivity() {
 
     private fun loadModel() {
         // Cargar el modelo desde la carpeta "assets"
-        val modelFile = FileUtil.loadMappedFile(this, "modelo_gamma.tflite")
+        val modelFile = FileUtil.loadMappedFile(this, "modelo_iota.tflite")
         interpreter = Interpreter(modelFile)
     }
 
