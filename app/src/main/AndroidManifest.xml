@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.atogdevelop.odonscan">
     <!-- Permiso para usar la cámara -->
     <uses-permission android:name="android.permission.CAMERA" /> <!-- Permiso para escribir en el almacenamiento externo (opcional, si necesitas guardar imágenes) -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Permiso para leer del almacenamiento externo (opcional, si necesitas acceder a imágenes guardadas) -->
@@ -30,26 +31,26 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <activity
-            android:name=".activities.CorrectID"
+            android:name="com.atogdevelop.odonscan.activities.CorrectID"
             android:exported="false"
             android:label="@string/title_activity_correct_id"
             android:theme="@style/Theme.MyApplication" />
         <activity
-            android:name=".activities.WrongID"
+            android:name="com.atogdevelop.odonscan.activities.WrongID"
             android:exported="false"
             android:label="@string/title_activity_wrong_id"
             android:theme="@style/Theme.MyApplication" />
         <activity
-            android:name=".activities.InstructionsActivity"
+            android:name="com.atogdevelop.odonscan.activities.InstructionsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.BuildingActivity"
+            android:name="com.atogdevelop.odonscan.activities.BuildingActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SecondActivity"
+            android:name="com.atogdevelop.odonscan.activities.SecondActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.atogdevelop.odonscan.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

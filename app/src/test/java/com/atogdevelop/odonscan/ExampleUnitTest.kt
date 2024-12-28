@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.atogdevelop.odonscan
 
 import org.junit.Test
 

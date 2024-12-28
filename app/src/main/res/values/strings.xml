@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">OdonScan</string>
     <string name="entry">ENTRAR</string>
     <string name="back">VOLVER</string>
     <string name="more">CONOCE MÁS...</string>

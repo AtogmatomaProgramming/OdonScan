@@ -1,10 +1,10 @@
-package com.example.myapplication.activities
+package com.atogdevelop.odonscan.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.example.myapplication.R
+import com.atogdevelop.odonscan.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,7 +1,6 @@
-package com.example.myapplication.activities
+package com.atogdevelop.odonscan.activities
 
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -17,10 +16,11 @@ import java.io.FileOutputStream
 import java.io.IOException
 import android.net.Uri
 import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
-import com.example.myapplication.R
-import com.example.myapplication.processing.ImageProcessor
+import com.atogdevelop.odonscan.R
+import com.atogdevelop.odonscan.processing.ImageProcessor
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
 
@@ -37,19 +37,28 @@ class InstructionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_instructions_camera)
 
+        Log.d("InstructionsActivity", "onCreate() iniciado")
+
         // Botón para acceder a la cámara
         val accessCameraButton: Button = findViewById(R.id.access_camera)
         accessCameraButton.setOnClickListener {
+            Log.d("InstructionsActivity", "Botón de cámara presionado")
             showImageSourceDialog()  // Muestra el diálogo para elegir entre cámara o galería
         }
 
         // Botón de retroceso
         val backButton: Button = findViewById(R.id.back_camera)
         backButton.setOnClickListener {
+            Log.d("InstructionsActivity", "Botón de retroceso presionado")
             finish()
         }
         // Cargar Modelo
-        loadModel()
+        try {
+            loadModel()
+            Log.d("InstructionsActivity", "Modelo cargado exitosamente")
+        } catch (e: Exception) {
+            Log.e("InstructionsActivity", "Error al cargar el modelo: ${e.message}")
+        }
     }
 
     private fun loadModel() {
@@ -65,8 +74,14 @@ class InstructionsActivity : AppCompatActivity() {
         builder.setTitle("Seleccionar origen de la imagen")
         builder.setItems(options) { dialog, which ->
             when (which) {
-                0 -> openCamera()  // Opción para tomar una foto con la cámara
-                1 -> openGallery() // Opción para seleccionar una imagen de la galería
+                0 -> {
+                    Log.d("InstructionsActivity", "Seleccionada opción: Tomar foto")
+                    openCamera()
+                }
+                1 -> {
+                    Log.d("InstructionsActivity", "Seleccionada opción: Seleccionar de la galería")
+                    openGallery()
+                }
             }
         }
         builder.show()
@@ -117,21 +132,32 @@ class InstructionsActivity : AppCompatActivity() {
 
     private fun openCamera() {
         if (isCameraPermissionGranted()) {
-            val photoFile = File(externalCacheDir, "photo_${System.currentTimeMillis()}.jpg")
-            photoUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
+            try {
+                val photoFile = File(externalCacheDir, "photo_${System.currentTimeMillis()}.jpg")
+                photoUri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", photoFile)
 
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
+                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
+                Log.d("InstructionsActivity", "Cámara iniciada con URI: $photoUri")
+            } catch (e: Exception) {
+                Log.e("InstructionsActivity", "Error al abrir la cámara: ${e.message}")
+            }
         } else {
+            Log.d("InstructionsActivity", "Permiso de cámara no concedido")
             requestCameraPermission()
         }
     }
 
     private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        intent.type = "image/*"
-        startActivityForResult(intent, GALLERY_REQUEST_CODE)
+        try {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            intent.type = "image/*"
+            startActivityForResult(intent, GALLERY_REQUEST_CODE)
+            Log.d("InstructionsActivity", "Galería abierta")
+        } catch (e: Exception) {
+            Log.e("InstructionsActivity", "Error al abrir la galería: ${e.message}")
+        }
     }
 
     // Manejar el resultado de la cámara
@@ -142,40 +168,77 @@ class InstructionsActivity : AppCompatActivity() {
         when (requestCode) {
             CAMERA_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK && ::photoUri.isInitialized) {
+                    Log.d("InstructionsActivity", "Foto capturada con éxito: $photoUri")
                     val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, photoUri)
                     saveImageAndProcess(bitmap)
+                } else {
+                    Log.d("InstructionsActivity", "Captura de foto cancelada o fallida")
                 }
             }
             GALLERY_REQUEST_CODE -> {
                 if (resultCode == RESULT_OK && data != null) {
                     val selectedImageUri = data.data
-                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImageUri)
-                    saveImageAndProcess(bitmap)
+                    Log.d("InstructionsActivity", "Imagen seleccionada de la galería: $selectedImageUri")
+
+                    if (selectedImageUri != null) {
+                        // Mostrar imagen y confirmar con el usuario
+                        showImageConfirmationDialog(selectedImageUri)
+                    }
+                } else {
+                    Log.d("InstructionsActivity", "Selección de imagen cancelada o fallida")
                 }
             }
         }
     }
 
+    private fun showImageConfirmationDialog(imageUri: Uri) {
+        try {
+            // Convertir URI en Bitmap para mostrarlo
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+
+            // Crear un ImageView para mostrar la imagen en el diálogo
+            val imageView = ImageView(this)
+            imageView.setImageBitmap(bitmap)
+            imageView.adjustViewBounds = true
+
+            // Configurar el diálogo
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("¿Quieres usar esta imagen?")
+            builder.setView(imageView) // Añadir el ImageView al diálogo
+            builder.setPositiveButton("Usar") { dialog, _ ->
+                dialog.dismiss()
+                // Confirmar imagen seleccionada y enviarla para procesamiento
+                saveImageAndProcess(bitmap)
+                Log.d("InstructionsActivity", "Imagen confirmada por el usuario")
+            }
+            builder.setNegativeButton("Cancelar") { dialog, _ ->
+                dialog.dismiss()
+                Log.d("InstructionsActivity", "Imagen rechazada por el usuario")
+            }
+
+            // Mostrar el diálogo
+            builder.create().show()
+        } catch (e: Exception) {
+            Log.e("InstructionsActivity", "Error al mostrar la imagen: ${e.message}")
+        }
+    }
+
+
     private fun saveImageAndProcess(bitmap: Bitmap) {
         try {
-            // Guardar la imagen como archivo temporal
-            Log.d("Debug", "Entrando en saveImageAndProcess()")
             val file = File(externalCacheDir, "photo_${System.currentTimeMillis()}.jpg")
             val fos = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
             fos.flush()
             fos.close()
 
-            Log.d("Debug", "Imagen guardada correctamente en: ${file.absolutePath}")
-            // Aquí delegamos el procesamiento de la imagen a la clase ImageProcessor
+            Log.d("InstructionsActivity", "Imagen guardada en: ${file.absolutePath}")
+
             val imageProcessor = ImageProcessor(interpreter, this)
             imageProcessor.processImage(Uri.fromFile(file))
-            Log.d("Debug", "Imagen enviada a processImage()")
-
+            Log.d("InstructionsActivity", "Imagen enviada para procesamiento")
         } catch (e: IOException) {
-            Log.e("Debug", "Error al guardar la imagen: ${e.message}")
-            e.printStackTrace()
-            Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show()
+            Log.e("InstructionsActivity", "Error al guardar la imagen: ${e.message}")
         }
     }
 

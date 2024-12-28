@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:498222139954:android:57cd107a3e25dcba4e8a2b",
+        "mobilesdk_app_id": "1:498222139954:android:7b8ba5f81b78a2894e8a2b",
         "android_client_info": {
-          "package_name": "com.example.myapplication"
+          "package_name": "com.atogdevelop.odonscan"
         }
       },
       "oauth_client": [],

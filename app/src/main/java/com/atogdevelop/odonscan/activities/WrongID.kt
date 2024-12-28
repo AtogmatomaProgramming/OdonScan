@@ -1,20 +1,20 @@
-package com.example.myapplication.activities
+package com.atogdevelop.odonscan.activities
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myapplication.R
+import com.atogdevelop.odonscan.R
 
-class BuildingActivity: AppCompatActivity() {
+class WrongID: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_obras)
-        Log.d("Debug", "Entrando en BuildingActivity desde ${intent.component?.className}")
+        setContentView(R.layout.activity_wrong)
 
-        val btn: Button = findViewById(R.id.back)
+        val btn: Button = findViewById(R.id.back_wrong_id)
         btn.setOnClickListener {
+
             finish()
+
         }
 
     }
