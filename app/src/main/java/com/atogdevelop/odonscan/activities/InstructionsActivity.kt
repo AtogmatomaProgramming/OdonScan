@@ -196,28 +196,38 @@ class InstructionsActivity : AppCompatActivity() {
             // Convertir URI en Bitmap para mostrarlo
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
 
-            // Crear un ImageView para mostrar la imagen en el diálogo
-            val imageView = ImageView(this)
+            // Inflar el diseño personalizado del diálogo
+            val dialogView = layoutInflater.inflate(R.layout.dialog_image_confirmation, null)
+
+            // Configurar el ImageView en el diseño
+            val imageView = dialogView.findViewById<ImageView>(R.id.dialogImageView)
             imageView.setImageBitmap(bitmap)
-            imageView.adjustViewBounds = true
+
+            // Configurar los botones
+            val buttonUse = dialogView.findViewById<Button>(R.id.buttonUse)
+            val buttonCancel = dialogView.findViewById<Button>(R.id.buttonCancel)
 
             // Configurar el diálogo
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("¿Quieres usar esta imagen?")
-            builder.setView(imageView) // Añadir el ImageView al diálogo
-            builder.setPositiveButton("Usar") { dialog, _ ->
+            builder.setView(dialogView)
+
+            val dialog = builder.create()
+
+            // Acción para el botón "Usar"
+            buttonUse.setOnClickListener {
                 dialog.dismiss()
-                // Confirmar imagen seleccionada y enviarla para procesamiento
                 saveImageAndProcess(bitmap)
                 Log.d("InstructionsActivity", "Imagen confirmada por el usuario")
             }
-            builder.setNegativeButton("Cancelar") { dialog, _ ->
+
+            // Acción para el botón "Cancelar"
+            buttonCancel.setOnClickListener {
                 dialog.dismiss()
                 Log.d("InstructionsActivity", "Imagen rechazada por el usuario")
             }
 
             // Mostrar el diálogo
-            builder.create().show()
+            dialog.show()
         } catch (e: Exception) {
             Log.e("InstructionsActivity", "Error al mostrar la imagen: ${e.message}")
         }

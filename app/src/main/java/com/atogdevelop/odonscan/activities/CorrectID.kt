@@ -91,11 +91,11 @@ class CorrectID : ComponentActivity() {
         Log.d("CorrectID", "size: $size, similar: $similar")
 
         // Actualiza la UI con los datos obtenidos
-        speciesCName.text = "Nombre Científico: ${c_name ?: "Desconocido"}"
-        speciesVName.text = "Nombre Vernáculo: ${v_name ?: "Desconocido"}"
-        speciesDescription.text = "Descripción: ${description ?: "No disponible"}"
+        speciesCName.text = "${c_name ?: "Desconocido"}"
+        speciesVName.text = "${v_name ?: "Desconocido"}"
+        speciesDescription.text = "${description ?: "No disponible"}"
         speciesFaoCode.text = "Código FAO: ${fao_code ?: "No disponible"}"
-        speciesGeoDist.text = "Distribución Geográfica: ${geo_dist ?: "No especificada"}"
+        speciesGeoDist.text = "${geo_dist ?: "No especificada"}"
         speciesSize.text = "Tamaño Promedio: ${size ?: "No disponible"}"
         speciesSimilar.text = "Especies Similares: ${similar ?: "Ninguna"}"
 

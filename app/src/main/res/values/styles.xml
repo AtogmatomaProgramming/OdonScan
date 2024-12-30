@@ -13,5 +13,29 @@
         <item name="android:layout_margin">8dp</item> <!-- Margen externo -->
     </style>
 
+    <!-- Estilo estándar para las tarjetas -->
+    <style name="StandardCardStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">12dp</item> <!-- Esquinas redondeadas -->
+        <item name="cardElevation">4dp</item> <!-- Sombra -->
+        <item name="cardBackgroundColor">@color/blue_ieo</item> <!-- Fondo azul -->
+    </style>
+
+    <!-- Estilo para los textos dentro de las tarjetas -->
+    <style name="CardTextStyle">
+        <item name="android:textColor">@android:color/white</item> <!-- Texto blanco -->
+        <item name="android:textSize">14sp</item> <!-- Tamaño de fuente -->
+        <item name="android:padding">16dp</item> <!-- Espaciado interno -->
+        <item name="android:gravity">center_vertical</item> <!-- Alineación vertical -->
+    </style>
+
+    <!-- Estilo para textos destacados como el Nombre Científico -->
+    <style name="CardTextStyle.Headline">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18sp</item> <!-- Tamaño mayor -->
+        <item name="android:textStyle">bold</item> <!-- Texto en negrita -->
+        <item name="android:padding">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
 
 </resources>

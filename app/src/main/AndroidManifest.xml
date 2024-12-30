@@ -2,12 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.atogdevelop.odonscan">
-    <!-- Permiso para usar la cámara -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- Permiso para escribir en el almacenamiento externo (opcional, si necesitas guardar imágenes) -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Permiso para leer del almacenamiento externo (opcional, si necesitas acceder a imágenes guardadas) -->
+
+    <!-- Permisos necesarios -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- Indicar que la aplicación usa la cámara -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
+    <!-- Indicar que la aplicación usa la cámara -->
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -21,6 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+
+        <!-- Configuración de FileProvider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -30,34 +35,47 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <!-- Actividades -->
         <activity
             android:name="com.atogdevelop.odonscan.activities.CorrectID"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:label="@string/title_activity_correct_id"
             android:theme="@style/Theme.MyApplication" />
+
         <activity
             android:name="com.atogdevelop.odonscan.activities.WrongID"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:label="@string/title_activity_wrong_id"
             android:theme="@style/Theme.MyApplication" />
+
         <activity
             android:name="com.atogdevelop.odonscan.activities.InstructionsActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
+
         <activity
             android:name="com.atogdevelop.odonscan.activities.BuildingActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
+
         <activity
             android:name="com.atogdevelop.odonscan.activities.SecondActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
+
+        <!-- Actividad Principal -->
         <activity
             android:name="com.atogdevelop.odonscan.activities.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+    </application>
 </manifest>

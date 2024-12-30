@@ -15,9 +15,15 @@
     <string name="indicationC">-Intente que solo haya un individuo</string>
     <string name="camera">ACCESO CAMARA</string>
     <string name="take_photo">TOMAR FOTO</string>
+    <string name="selected_photo">Foto seleccionada</string>
+    <string name="use">Usar</string>
+    <string name="cancel">Cancelar</string>
     <string name="title_activity_access_camera">AccessCamera</string>
     <string name="title_activity_more">MoreActivity</string>
     <string name="title_activity_wrong_id">WrongID</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_correct_id">CorrectID</string>
+    <string name="vname">Nombre vernáculo:</string>
+    <string name="description">Descripción:</string>
+    <string name="distribution">Distribución geográfica:</string>
 </resources>

@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,49 +14,119 @@
             android:id="@+id/speciesImageView"
             android:layout_width="0dp"
             android:layout_height="300dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:contentDescription="None"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Nombre común -->
+        <!-- Nombre científico -->
         <TextView
             android:id="@+id/speciesCNameTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:gravity="center"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/speciesImageView"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Cientific Name: European Hake" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/speciesImageView"
+            android:text="Cientific Name: European Hake" />
 
         <!-- Nombre vulgar -->
-        <TextView
-            android:id="@+id/speciesVNameTextView"
+        <LinearLayout
+            android:id="@+id/speciesVBlock"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_marginTop="8dp"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/speciesCNameTextView"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Vulgar Name: Merluza Europea" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/speciesCNameTextView">
+
+            <TextView
+                android:id="@+id/speciesVLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:gravity="start"
+                android:text="Nombre Vernáculo:" />
+
+            <TextView
+                android:id="@+id/speciesVNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:textStyle="italic"
+                android:textSize="16sp"
+                android:text="Merluza Europea" />
+        </LinearLayout>
 
         <!-- Descripción -->
-        <TextView
-            android:id="@+id/speciesDescriptionTextView"
+        <LinearLayout
+            android:id="@+id/speciesDescriptionBlock"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_marginTop="8dp"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/speciesVNameTextView"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Description: A large predatory fish found in deep waters." />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/speciesVBlock">
+
+            <TextView
+                android:id="@+id/speciesDescriptionLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:gravity="start"
+                android:text="Descripción:" />
+
+            <TextView
+                android:id="@+id/speciesDescriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:textStyle="italic"
+                android:text="A large predatory fish found in deep waters." />
+        </LinearLayout>
+
+        <!-- Distribución geográfica -->
+        <LinearLayout
+            android:id="@+id/speciesGeoDistBlock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/speciesDescriptionBlock">
+
+            <TextView
+                android:id="@+id/speciesGeoDistLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:gravity="start"
+                android:textColor="@color/black"
+                android:text="Distribución Geográfica:" />
+
+            <TextView
+                android:id="@+id/speciesGeoDistTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:text="Geographical Distribution: North Atlantic, Mediterranean Sea" />
+        </LinearLayout>
 
         <!-- Código FAO -->
         <TextView
@@ -67,22 +135,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/speciesDescriptionTextView"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/speciesGeoDistBlock"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="FAO Code: HKE" />
-
-        <!-- Distribución geográfica -->
-        <TextView
-            android:id="@+id/speciesGeoDistTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/speciesFaoCodeTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Geographical Distribution: North Atlantic, Mediterranean Sea" />
+            android:text="FAO Code: HKE" />
 
         <!-- Tamaño medio -->
         <TextView
@@ -91,10 +148,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/speciesGeoDistTextView"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/speciesFaoCodeTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Medium Size: 50cm" />
+            android:text="Medium Size: 50cm" />
 
         <!-- Especies similares -->
         <TextView
@@ -105,8 +163,9 @@
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/speciesSizeTextView"
             app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Similar Species: Merluccius capensis, Merluccius paradoxus" />
+            android:text="Similar Species: Merluccius capensis, Merluccius paradoxus" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
