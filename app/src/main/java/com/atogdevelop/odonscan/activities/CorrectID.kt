@@ -2,6 +2,8 @@ package com.atogdevelop.odonscan.activities
 
 import com.bumptech.glide.Glide
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -20,6 +22,14 @@ class CorrectID : ComponentActivity() {
     private lateinit var speciesDescription: TextView
     private lateinit var speciesSimilar: TextView
     private lateinit var speciesImage: ImageView
+
+    private val inactivityTimeout: Long = 30 * 60 * 1000 // 30 minutos en milisegundos
+    private var inactivityHandler: Handler? = null
+    private val inactivityRunnable = Runnable {
+        // Finaliza la aplicación después del tiempo de inactividad
+        finishAffinity() // Cierra todas las actividades
+        System.exit(0) // Opcional: Detiene el proceso
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correct)
@@ -48,6 +58,8 @@ class CorrectID : ComponentActivity() {
         } else {
             loadSpeciesData(speciesTag)
         }
+
+        inactivityHandler = Handler(Looper.getMainLooper())
 
     }
 
@@ -113,11 +125,28 @@ class CorrectID : ComponentActivity() {
     }
 
 
-
     override fun onBackPressed() {
         super.onBackPressed()
         // Aquí también podrías añadir lógica adicional si es necesario
         finish()  // Esto finalizará la actividad al presionar el botón "Atrás"
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Cancelar cualquier temporizador cuando se retoma la actividad
+        inactivityHandler?.removeCallbacks(inactivityRunnable)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Iniciar el temporizador cuando la aplicación está en pausa
+        inactivityHandler?.postDelayed(inactivityRunnable, inactivityTimeout)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Limpia el handler para evitar fugas de memoria
+        inactivityHandler?.removeCallbacks(inactivityRunnable)
     }
 
 

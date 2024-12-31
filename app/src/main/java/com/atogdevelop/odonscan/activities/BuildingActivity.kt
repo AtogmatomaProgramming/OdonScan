@@ -3,10 +3,9 @@ package com.atogdevelop.odonscan.activities
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 import com.atogdevelop.odonscan.R
 
-class BuildingActivity: AppCompatActivity() {
+class BuildingActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_obras)

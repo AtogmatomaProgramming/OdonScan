@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.File
@@ -26,7 +25,7 @@ import org.tensorflow.lite.support.common.FileUtil
 
 
 
-class InstructionsActivity : AppCompatActivity() {
+class InstructionsActivity : BaseActivity() {
 
     private lateinit var interpreter: Interpreter
     private lateinit var photoUri: Uri
