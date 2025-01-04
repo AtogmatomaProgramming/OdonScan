@@ -10,7 +10,7 @@ class SecondActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
-        val id_button: Button = findViewById(R.id.reconocimiento)
+        val id_button: Button = findViewById(R.id.identify)
         id_button.setOnClickListener {
 
             val intentIdButton: Intent = Intent(this, InstructionsActivity::class.java)
@@ -18,10 +18,10 @@ class SecondActivity : BaseActivity() {
 
         }
 
-        val register_button: Button = findViewById(R.id.inicio_sesion)
+        val register_button: Button = findViewById(R.id.log_sign_in)
         register_button.setOnClickListener {
 
-            val intentRegisterButton: Intent = Intent(this, BuildingActivity::class.java)
+            val intentRegisterButton: Intent = Intent(this, ConstructionActivity::class.java)
             startActivity(intentRegisterButton)
 
         }
@@ -29,7 +29,7 @@ class SecondActivity : BaseActivity() {
         val more_button: Button = findViewById(R.id.more)
         more_button.setOnClickListener {
 
-            val intentMoreButton: Intent = Intent(this, BuildingActivity::class.java)
+            val intentMoreButton: Intent = Intent(this, ConstructionActivity::class.java)
             startActivity(intentMoreButton)
 
         }

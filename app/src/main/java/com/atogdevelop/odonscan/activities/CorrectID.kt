@@ -23,20 +23,23 @@ class CorrectID : ComponentActivity() {
     private lateinit var speciesSimilar: TextView
     private lateinit var speciesImage: ImageView
 
-    private val inactivityTimeout: Long = 30 * 60 * 1000 // 30 minutos en milisegundos
+    //Nota. En este caso, como esta actividad hereda de "CompactActivity" en vez de
+    //"AppCompactActivity", se tuvo que definir dentro del propio script los elementos
+    //(variables, funciones) para que después de un tiempo de inactividad (5 minutos)
+    //se "termine" la app.
+    private val inactivityTimeout: Long = 5 * 60 * 1000
     private var inactivityHandler: Handler? = null
     private val inactivityRunnable = Runnable {
-        // Finaliza la aplicación después del tiempo de inactividad
-        finishAffinity() // Cierra todas las actividades
-        System.exit(0) // Opcional: Detiene el proceso
+
+        finishAffinity()
+        System.exit(0)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correct)
-        //FirebaseApp.initializeApp(this)
+
 
         Log.d("CorrectID", "onCreate() iniciado")
-        // Inicializa las vistas
         speciesCName = findViewById(R.id.speciesCNameTextView)
         speciesVName = findViewById(R.id.speciesVNameTextView)
         speciesFaoCode = findViewById(R.id.speciesFaoCodeTextView)
@@ -46,12 +49,9 @@ class CorrectID : ComponentActivity() {
         speciesImage = findViewById(R.id.speciesImageView)
         speciesSimilar = findViewById(R.id.speciesSimilarTextView)
 
-        // Obtén la etiqueta desde el intent
         val speciesTag = intent.getStringExtra("SPECIES_TAG")
         Log.d("CorrectID", "Species Tag: $speciesTag")
 
-
-        // Cargar datos
         if (speciesTag.isNullOrEmpty()) {
             Log.e("CorrectID", "Especie no proporcionada o nula")
             speciesCName.text = "Error: Especie no proporcionada"
@@ -63,14 +63,14 @@ class CorrectID : ComponentActivity() {
 
     }
 
+    //Función para cargar los datos desde Firestore
     private fun loadSpeciesData(speciesId: String) {
-        // Referencia al documento en Firestore
+
         val db = FirebaseFirestore.getInstance()
         val docRef = db.collection("marine_species").document(speciesId)
 
         Log.d("CorrectID", "Cargando datos de Firestore para especie: $speciesId")
 
-        // Lee los datos del documento
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
@@ -87,6 +87,8 @@ class CorrectID : ComponentActivity() {
             }
     }
 
+    //Función que actualizar los datos de la pantalla con los que se han recuperado para la especie
+    //desde Firestore
     private fun updateUI(document: DocumentSnapshot) {
         // Obtiene los datos del documento
         val c_name = document.getString("c_name")
@@ -102,7 +104,6 @@ class CorrectID : ComponentActivity() {
         Log.d("CorrectID", "imageUrl: $imageUrl, fao_code: $fao_code, geo_dist: $geo_dist")
         Log.d("CorrectID", "size: $size, similar: $similar")
 
-        // Actualiza la UI con los datos obtenidos
         speciesCName.text = "${c_name ?: "Desconocido"}"
         speciesVName.text = "${v_name ?: "Desconocido"}"
         speciesDescription.text = "${description ?: "No disponible"}"
@@ -111,44 +112,37 @@ class CorrectID : ComponentActivity() {
         speciesSize.text = "Tamaño Promedio: ${size ?: "No disponible"}"
         speciesSimilar.text = "Especies Similares: ${similar ?: "Ninguna"}"
 
-        // Cargar imagen si está disponible
         if (imageUrl != null && (imageUrl.startsWith("http://") || imageUrl.startsWith("https://"))) {
             Glide.with(this)
                 .load(imageUrl)
-                .error(R.drawable.image_not_found) // Imagen por defecto si falla la URL
+                .error(R.drawable.image_not_found) // Imagen por defecto si da error la URL
                 .into(speciesImage)
             Log.d("CorrectID", "Cargando imagen desde URL válida: $imageUrl")
         } else {
             Log.e("CorrectID", "URL no válida o no encontrada: $imageUrl")
-            speciesImage.setImageResource(R.drawable.image_not_found) // Imagen por defecto
+            speciesImage.setImageResource(R.drawable.image_not_found)
         }
     }
 
-
     override fun onBackPressed() {
         super.onBackPressed()
-        // Aquí también podrías añadir lógica adicional si es necesario
-        finish()  // Esto finalizará la actividad al presionar el botón "Atrás"
+        finish()
     }
 
     override fun onResume() {
         super.onResume()
-        // Cancelar cualquier temporizador cuando se retoma la actividad
         inactivityHandler?.removeCallbacks(inactivityRunnable)
     }
 
     override fun onPause() {
         super.onPause()
-        // Iniciar el temporizador cuando la aplicación está en pausa
         inactivityHandler?.postDelayed(inactivityRunnable, inactivityTimeout)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        // Limpia el handler para evitar fugas de memoria
         inactivityHandler?.removeCallbacks(inactivityRunnable)
     }
-
 
 }
 

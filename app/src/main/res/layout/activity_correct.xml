@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Imagen de la especie -->
         <ImageView
             android:id="@+id/speciesImageView"
             android:layout_width="0dp"
@@ -20,7 +19,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Nombre científico -->
         <TextView
             android:id="@+id/speciesCNameTextView"
             android:layout_width="0dp"
@@ -35,7 +33,6 @@
             app:layout_constraintTop_toBottomOf="@id/speciesImageView"
             android:text="Cientific Name: European Hake" />
 
-        <!-- Nombre vulgar -->
         <LinearLayout
             android:id="@+id/speciesVBlock"
             android:layout_width="0dp"
@@ -53,7 +50,7 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:gravity="start"
-                android:text="Nombre Vernáculo:" />
+                android:text="@string/vname" />
 
             <TextView
                 android:id="@+id/speciesVNameTextView"
@@ -66,7 +63,6 @@
                 android:text="Merluza Europea" />
         </LinearLayout>
 
-        <!-- Descripción -->
         <LinearLayout
             android:id="@+id/speciesDescriptionBlock"
             android:layout_width="0dp"
@@ -84,7 +80,7 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:gravity="start"
-                android:text="Descripción:" />
+                android:text="@string/description" />
 
             <TextView
                 android:id="@+id/speciesDescriptionTextView"
@@ -97,7 +93,6 @@
                 android:text="A large predatory fish found in deep waters." />
         </LinearLayout>
 
-        <!-- Distribución geográfica -->
         <LinearLayout
             android:id="@+id/speciesGeoDistBlock"
             android:layout_width="0dp"
@@ -115,7 +110,7 @@
                 android:textSize="16sp"
                 android:gravity="start"
                 android:textColor="@color/black"
-                android:text="Distribución Geográfica:" />
+                android:text="@string/distribution" />
 
             <TextView
                 android:id="@+id/speciesGeoDistTextView"
@@ -128,7 +123,6 @@
                 android:text="Geographical Distribution: North Atlantic, Mediterranean Sea" />
         </LinearLayout>
 
-        <!-- Código FAO -->
         <TextView
             android:id="@+id/speciesFaoCodeTextView"
             android:layout_width="0dp"
@@ -141,7 +135,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:text="FAO Code: HKE" />
 
-        <!-- Tamaño medio -->
         <TextView
             android:id="@+id/speciesSizeTextView"
             android:layout_width="0dp"
@@ -154,7 +147,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:text="Medium Size: 50cm" />
 
-        <!-- Especies similares -->
         <TextView
             android:id="@+id/speciesSimilarTextView"
             android:layout_width="0dp"

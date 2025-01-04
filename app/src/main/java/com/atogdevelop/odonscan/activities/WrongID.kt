@@ -11,16 +11,13 @@ class WrongID: BaseActivity() {
 
         val btn: Button = findViewById(R.id.back_wrong_id)
         btn.setOnClickListener {
-
             finish()
-
         }
 
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        // Aquí también podrías añadir lógica adicional si es necesario
-        finish()  // Esto finalizará la actividad al presionar el botón "Atrás"
+        finish()
     }
 }

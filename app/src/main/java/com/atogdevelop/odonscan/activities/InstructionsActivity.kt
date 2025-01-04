@@ -38,20 +38,18 @@ class InstructionsActivity : BaseActivity() {
 
         Log.d("InstructionsActivity", "onCreate() iniciado")
 
-        // Botón para acceder a la cámara
         val accessCameraButton: Button = findViewById(R.id.access_camera)
         accessCameraButton.setOnClickListener {
             Log.d("InstructionsActivity", "Botón de cámara presionado")
-            showImageSourceDialog()  // Muestra el diálogo para elegir entre cámara o galería
+            showImageSourceDialog()
         }
 
-        // Botón de retroceso
         val backButton: Button = findViewById(R.id.back_camera)
         backButton.setOnClickListener {
             Log.d("InstructionsActivity", "Botón de retroceso presionado")
             finish()
         }
-        // Cargar Modelo
+
         try {
             loadModel()
             Log.d("InstructionsActivity", "Modelo cargado exitosamente")
@@ -60,13 +58,13 @@ class InstructionsActivity : BaseActivity() {
         }
     }
 
+    //Función para cargar el modelo de Inteligencia Artificial
     private fun loadModel() {
-        // Cargar el modelo desde la carpeta "assets"
         val modelFile = FileUtil.loadMappedFile(this, "modelo_iota.tflite")
         interpreter = Interpreter(modelFile)
     }
 
-    // Mostrar el diálogo para elegir entre la cámara o la galería
+    //Función que muestra el diálogo para elegir entre la cámara o la galería
     private fun showImageSourceDialog() {
         val options = arrayOf("Tomar foto", "Seleccionar de la galería")
         val builder = AlertDialog.Builder(this)
@@ -86,14 +84,14 @@ class InstructionsActivity : BaseActivity() {
         builder.show()
     }
 
-    // Verificar si el permiso de cámara está concedido
+    //Función para verificar si el permiso de cámara está concedido
     private fun isCameraPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             this, android.Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    // Solicitar el permiso de la cámara si no está concedido
+    //Función para solicitar el permiso de la cámara, en caso de que no esté concedido
     private fun requestCameraPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
             AlertDialog.Builder(this)
@@ -117,6 +115,7 @@ class InstructionsActivity : BaseActivity() {
         }
     }
 
+    //Función para gestionar el permiso de uso de la cámara
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
@@ -128,7 +127,7 @@ class InstructionsActivity : BaseActivity() {
         }
     }
 
-
+    //Función para abrir la cámara para tomar la foto
     private fun openCamera() {
         if (isCameraPermissionGranted()) {
             try {
@@ -148,6 +147,7 @@ class InstructionsActivity : BaseActivity() {
         }
     }
 
+    //Función para abrir la galería, en caso de que se elija esa opción
     private fun openGallery() {
         try {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -159,7 +159,7 @@ class InstructionsActivity : BaseActivity() {
         }
     }
 
-    // Manejar el resultado de la cámara
+    //Función para manejar la imagen que se va a analizar (de la cámara o de la galería)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("Debug", "onActivityResult() -> requestCode: $requestCode, resultCode: $resultCode")
@@ -180,7 +180,7 @@ class InstructionsActivity : BaseActivity() {
                     Log.d("InstructionsActivity", "Imagen seleccionada de la galería: $selectedImageUri")
 
                     if (selectedImageUri != null) {
-                        // Mostrar imagen y confirmar con el usuario
+
                         showImageConfirmationDialog(selectedImageUri)
                     }
                 } else {
@@ -190,49 +190,43 @@ class InstructionsActivity : BaseActivity() {
         }
     }
 
+    //Función que muestra la imagen para confirmarla por el usuario
     private fun showImageConfirmationDialog(imageUri: Uri) {
         try {
-            // Convertir URI en Bitmap para mostrarlo
+
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
 
-            // Inflar el diseño personalizado del diálogo
             val dialogView = layoutInflater.inflate(R.layout.dialog_image_confirmation, null)
 
-            // Configurar el ImageView en el diseño
             val imageView = dialogView.findViewById<ImageView>(R.id.dialogImageView)
             imageView.setImageBitmap(bitmap)
 
-            // Configurar los botones
             val buttonUse = dialogView.findViewById<Button>(R.id.buttonUse)
             val buttonCancel = dialogView.findViewById<Button>(R.id.buttonCancel)
 
-            // Configurar el diálogo
             val builder = AlertDialog.Builder(this)
             builder.setView(dialogView)
 
             val dialog = builder.create()
 
-            // Acción para el botón "Usar"
             buttonUse.setOnClickListener {
                 dialog.dismiss()
                 saveImageAndProcess(bitmap)
                 Log.d("InstructionsActivity", "Imagen confirmada por el usuario")
             }
 
-            // Acción para el botón "Cancelar"
             buttonCancel.setOnClickListener {
                 dialog.dismiss()
                 Log.d("InstructionsActivity", "Imagen rechazada por el usuario")
             }
 
-            // Mostrar el diálogo
             dialog.show()
         } catch (e: Exception) {
             Log.e("InstructionsActivity", "Error al mostrar la imagen: ${e.message}")
         }
     }
 
-
+    //Función para salvar y procesar la imagen a través de la clase "ImageProcessor"
     private fun saveImageAndProcess(bitmap: Bitmap) {
         try {
             val file = File(externalCacheDir, "photo_${System.currentTimeMillis()}.jpg")
@@ -251,6 +245,7 @@ class InstructionsActivity : BaseActivity() {
         }
     }
 
+    //Variables para la gestión de permisos de la cámara o de la galería
     companion object {
         private const val CAMERA_REQUEST_CODE = 100
         private const val GALLERY_REQUEST_CODE = 102
@@ -258,9 +253,6 @@ class InstructionsActivity : BaseActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        // Aquí también podrías añadir lógica adicional si es necesario
-        finish()  // Esto finalizará la actividad al presionar el botón "Atrás"
+        finish()
     }
 }
-
-

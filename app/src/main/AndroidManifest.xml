@@ -57,7 +57,7 @@
             android:exported="false" />
 
         <activity
-            android:name="com.atogdevelop.odonscan.activities.BuildingActivity"
+            android:name="com.atogdevelop.odonscan.activities.ConstructionActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
 

@@ -6,58 +6,57 @@
     android:layout_height="match_parent"
     tools:context=".activities.SecondActivity">
 
+    <ImageView
+        android:id="@+id/phone_logo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:rotation="90"
+        app:layout_constraintBottom_toTopOf="@+id/identify"
+        app:layout_constraintEnd_toEndOf="@+id/identify"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/identify"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/logo_phone" />
 
     <ImageView
-        android:id="@+id/peje_acceso"
-        android:layout_width="148dp"
+        android:id="@+id/fish_access"
+        android:layout_width="0dp"
         android:layout_height="59dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/phone_logo"
+        app:layout_constraintEnd_toEndOf="@+id/phone_logo"
         app:layout_constraintHorizontal_bias="0.539"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/phone_logo"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.138"
+        app:layout_constraintVertical_bias="0.564"
         app:srcCompat="@drawable/logo_aes_fish_fish" />
 
     <ImageView
         android:id="@+id/user"
-        android:layout_width="222dp"
-        android:layout_height="137dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.398"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/log_sign_in"
+        app:layout_constraintEnd_toEndOf="@+id/log_sign_in"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintStart_toStartOf="@+id/log_sign_in"
+        app:layout_constraintTop_toBottomOf="@+id/identify"
+        app:layout_constraintVertical_bias="0.513"
         app:srcCompat="@drawable/logo_log" />
 
     <ImageView
         android:id="@+id/more_image"
-        android:layout_width="204dp"
-        android:layout_height="110dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.728"
+        android:layout_width="0dp"
+        android:layout_height="129dp"
+        app:layout_constraintBottom_toTopOf="@+id/more"
+        app:layout_constraintEnd_toEndOf="@+id/more"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/more"
+        app:layout_constraintTop_toBottomOf="@+id/log_sign_in"
+        app:layout_constraintVertical_bias="0.717"
         app:srcCompat="@drawable/logo_barco" />
 
-    <ImageView
-        android:id="@+id/phone_logo"
-        android:layout_width="272dp"
-        android:layout_height="176dp"
-        android:rotation="90"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.055"
-        app:srcCompat="@drawable/logo_phone" />
-
     <Button
-        android:id="@+id/reconocimiento"
+        android:id="@+id/identify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/blue_ieo"
@@ -65,34 +64,35 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.54"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.267" />
+        app:layout_constraintVertical_bias="0.257" />
 
     <Button
-        android:id="@+id/inicio_sesion"
-        android:layout_width="wrap_content"
+        android:id="@+id/log_sign_in"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/blue_ieo"
         android:text="@string/session"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/identify"
+        app:layout_constraintStart_toStartOf="@+id/identify"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.531" />
 
     <Button
         android:id="@+id/more"
-        android:layout_width="206dp"
-        android:layout_height="47dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:backgroundTint="@color/blue_ieo"
         android:text="@string/more"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/identify"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/identify"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.847" />
 

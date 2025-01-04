@@ -16,42 +16,34 @@ import java.nio.ByteOrder
 
 class ImageProcessor(private val interpreter: Interpreter, private val context: InstructionsActivity) {
 
-    // Método para procesar la imagen y devolver el resultado
+    //Función para procesar la imagen y devolver el resultado
     fun processImage(imageUri: Uri) {
 
         try {
 
             Log.d("ImageProcessor", "Entrando en processImage() con URI: $imageUri")
 
-            // Convertir la URI de la imagen en un Bitmap
-
             val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
             Log.d("ImageProcessor", "Imagen convertida a Bitmap con éxito")
 
-            // Redimensionar la imagen a las dimensiones que requiere el modelo
             val resizedImage = Bitmap.createScaledBitmap(bitmap, 256, 256, true)
             Log.d("ImageProcessor", "Imagen redimensionada a 256x256")
 
-            // Convertir la imagen en un ByteBuffer que TensorFlow Lite pueda procesar
             val byteBuffer = convertBitmapToByteBuffer(resizedImage)
             Log.d("ImageProcessor", "Imagen convertida a ByteBuffer")
 
-            // Crear un TensorBuffer de salida para la predicción
             val outputBuffer = TensorBuffer.createFixedSize(
                 intArrayOf(1, 3),
                 DataType.FLOAT32
-            )  // Ajusta según el modelo
+            )
             Log.d("ImageProcessor", "TensorBuffer de salida creado")
 
-            // Ejecutar la inferencia
             interpreter.run(byteBuffer, outputBuffer.buffer.rewind())
             Log.d("ImageProcessor", "Inferencia ejecutada con éxito")
 
-            // Obtener las probabilidades de clasificación
             val confidences = outputBuffer.floatArray
             Log.d("ImageProcessor", "Confidences obtenidas: ${confidences.joinToString(", ")}")
 
-            // Obtener el índice de la clase con mayor confianza
             val maxConfidenceIndex = confidences.indices.maxByOrNull { confidences[it] } ?: -1
             Log.d("ImageProcessor", "Índice con mayor confianza: $maxConfidenceIndex")
 
@@ -78,9 +70,10 @@ class ImageProcessor(private val interpreter: Interpreter, private val context: 
         }
     }
 
+    //Función para convertir de Bitmap a Buffer la imagen que se está procesando
     private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer {
         Log.d("ImageProcessor", "Convirtiendo Bitmap a ByteBuffer")
-        val buffer = ByteBuffer.allocateDirect(4 * 256 * 256 * 3) // Imagen RGB 256x256
+        val buffer = ByteBuffer.allocateDirect(4 * 256 * 256 * 3)
         buffer.order(ByteOrder.nativeOrder())
 
         val intValues = IntArray(256 * 256)
@@ -95,7 +88,7 @@ class ImageProcessor(private val interpreter: Interpreter, private val context: 
         return buffer
     }
 
-    // Función para obtener el nombre de la especie basado en el índice de la predicción
+    //Función para obtener el nombre de la especie basado en el índice de la predicción
     private fun getSpeciesName(index: Int): String {
         Log.d("ImageProcessor", "Obteniendo nombre de la especie para índice: $index")
         val speciesList = listOf("elemento_desconocido", "lepidorhombus_whiffiagonis", "micromesistius_poutassou")
@@ -104,12 +97,14 @@ class ImageProcessor(private val interpreter: Interpreter, private val context: 
         return speciesName
     }
 
+    //Función para navegar a la activity de que "No se ha podido reconocer la especie"
     private fun navigateToWrongID() {
         Log.d("ImageProcessor", "Navegando a WrongID")
         val intent = Intent(context, WrongID::class.java)
         context.startActivity(intent)
     }
 
+    //Función para navegar a la activity que gestiona la información de la especie
     private fun navigateToCorrectID(speciesName: String) {
         Log.d("ImageProcessor", "Navegando a CorrectID con nombre de especie: $speciesName")
         val intent = Intent(context, CorrectID::class.java)

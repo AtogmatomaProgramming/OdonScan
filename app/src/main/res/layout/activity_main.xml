@@ -8,16 +8,28 @@
 
 
     <ImageView
-        android:id="@+id/LOGO_IEO"
-        android:layout_width="230dp"
-        android:layout_height="61dp"
-        android:src="@drawable/ieo"
+        android:id="@+id/ieo_logo"
+        android:layout_width="116dp"
+        android:layout_height="46dp"
+        android:src="@drawable/logo_ieo_oficial"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.345"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.978" />
+
+    <ImageView
+        android:id="@+id/atog_logo"
+        android:layout_width="119dp"
+        android:layout_height="46dp"
+        android:src="@drawable/logo_pintadera_atog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.691"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.978" />
 
     <ImageView
         android:id="@+id/sapo_logo"
@@ -53,7 +65,7 @@
         app:srcCompat="@drawable/scan" />
 
     <ImageView
-        android:id="@+id/mantra"
+        android:id="@+id/scan_mantra"
         android:layout_width="319dp"
         android:layout_height="232dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -64,14 +76,14 @@
         app:srcCompat="@drawable/mantra_app" />
 
     <Button
-        android:id="@+id/acceder"
-        android:layout_width="207dp"
-        android:layout_height="47dp"
+        android:id="@+id/door_app"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:backgroundTint="@color/blue_ieo"
         android:text="@string/entry"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scan_title"
+        app:layout_constraintStart_toStartOf="@+id/scan_title"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.865" />
 
