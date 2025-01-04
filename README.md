@@ -79,8 +79,14 @@ When the app can not identify the element of the photo, it redirects you to the 
    </p>
 </p>
    
+### Building Screen
 
-     
-   
-   
+<p align="justify">
+Nowadays, the other features are not aviable. When you try to access them, the app shows you a screen explaining this.    
+   <p align="center">
    <img align= "center" src="https://i.imgur.com/ikJ5NGq.png">
+   </p>
+</p>
+
+   
+   
