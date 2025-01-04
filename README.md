@@ -71,7 +71,7 @@ This screen gives you the indications to take the best photo to identify the fis
 ### Result Screen
 
 <p align="justify">
-In the current version (1.0.0) the app can recognize two species: "bacaladilla"(left) and "gallo"(right). Using an online database hosted in Firestore, it displays key information (scientific name, description, regions where the species can be found, etc.) about the identified fish. regions where you can find it, ...) of the indetified fish.  
+In the current version (1.0.0) the app can recognize two species: "bacaladilla"(left) and "gallo"(right). Using an online database hosted in Firestore, it displays key information (scientific name, description, regions where the species can be found, etc.) about the identified fish. 
    <p align="center">
    <img src="https://i.imgur.com/EqzXgFQ.jpeg" alt="Bacaladilla" style="height: 60%; width:37%;">
    <img src="https://i.imgur.com/FN24xOR.jpeg" alt="Gallo" style="height: 60%; width:37%;">
