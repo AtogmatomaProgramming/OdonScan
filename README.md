@@ -20,6 +20,8 @@
   - [Result Screen](#result-screen)
   - [Error Screen](#error-screen)
   - [Under Construction Screen](#under-construction-screen)
+- [Technologies Used](#technologies-used)
+- [Contact Information](#contact-information)
 
 ## Description
 
