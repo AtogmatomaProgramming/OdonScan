@@ -20,14 +20,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import com.atogdevelop.odonscan.R
 import com.atogdevelop.odonscan.processing.ImageProcessor
-import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.support.common.FileUtil
-
 
 
 class InstructionsActivity : BaseActivity() {
 
-    private lateinit var interpreter: Interpreter
     private lateinit var photoUri: Uri
     private val CAMERA_PERMISSION_REQUEST_CODE = 101
     private val GALLERY_REQUEST_CODE = 102
@@ -50,18 +46,6 @@ class InstructionsActivity : BaseActivity() {
             finish()
         }
 
-        try {
-            loadModel()
-            Log.d("InstructionsActivity", "Modelo cargado exitosamente")
-        } catch (e: Exception) {
-            Log.e("InstructionsActivity", "Error al cargar el modelo: ${e.message}")
-        }
-    }
-
-    //Función para cargar el modelo de Inteligencia Artificial
-    private fun loadModel() {
-        val modelFile = FileUtil.loadMappedFile(this, "modelo_iota.tflite")
-        interpreter = Interpreter(modelFile)
     }
 
     //Función que muestra el diálogo para elegir entre la cámara o la galería
@@ -226,7 +210,7 @@ class InstructionsActivity : BaseActivity() {
         }
     }
 
-    //Función para salvar y procesar la imagen a través de la clase "ImageProcessor"
+    //Función para procesar la imagen a través de la clase "ImageProcessor"
     private fun saveImageAndProcess(bitmap: Bitmap) {
         try {
             val file = File(externalCacheDir, "photo_${System.currentTimeMillis()}.jpg")
@@ -237,7 +221,7 @@ class InstructionsActivity : BaseActivity() {
 
             Log.d("InstructionsActivity", "Imagen guardada en: ${file.absolutePath}")
 
-            val imageProcessor = ImageProcessor(interpreter, this)
+            val imageProcessor = ImageProcessor(this)
             imageProcessor.processImage(Uri.fromFile(file))
             Log.d("InstructionsActivity", "Imagen enviada para procesamiento")
         } catch (e: IOException) {

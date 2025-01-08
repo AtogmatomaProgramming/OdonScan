@@ -11,14 +11,32 @@ import com.atogdevelop.odonscan.activities.InstructionsActivity
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import org.tensorflow.lite.support.common.FileUtil
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-class ImageProcessor(private val interpreter: Interpreter, private val context: InstructionsActivity) {
+
+class ImageProcessor(private val context: InstructionsActivity) {
+
+    private lateinit var interpreter: Interpreter
+
+    init {
+        loadModel()
+    }
+
+    // Carga el modelo TensorFlow Lite
+    private fun loadModel() {
+        try {
+            val modelFile = FileUtil.loadMappedFile(context, "modelo_iota.tflite")
+            interpreter = Interpreter(modelFile)
+            Log.d("ImageProcessor", "Modelo cargado con éxito en ImageProcessor")
+        } catch (e: Exception) {
+            Log.e("ImageProcessor", "Error al cargar el modelo: ${e.message}")
+        }
+    }
 
     //Función para procesar la imagen y devolver el resultado
     fun processImage(imageUri: Uri) {
-
         try {
 
             Log.d("ImageProcessor", "Entrando en processImage() con URI: $imageUri")
