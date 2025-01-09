@@ -2,17 +2,14 @@ package com.atogdevelop.odonscan.activities
 
 import com.bumptech.glide.Glide
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.ComponentActivity
 import com.atogdevelop.odonscan.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.DocumentSnapshot
 
-class CorrectID : ComponentActivity() {
+class CorrectID : BaseActivity() {
 
     private lateinit var speciesCName: TextView
     private lateinit var speciesVName: TextView
@@ -23,17 +20,6 @@ class CorrectID : ComponentActivity() {
     private lateinit var speciesSimilar: TextView
     private lateinit var speciesImage: ImageView
 
-    //Nota. En este caso, como esta actividad hereda de "CompactActivity" en vez de
-    //"AppCompactActivity", se tuvo que definir dentro del propio script los elementos
-    //(variables, funciones) para que después de un tiempo de inactividad (5 minutos)
-    //se "termine" la app.
-    private val inactivityTimeout: Long = 5 * 60 * 1000
-    private var inactivityHandler: Handler? = null
-    private val inactivityRunnable = Runnable {
-
-        finishAffinity()
-        System.exit(0)
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correct)
@@ -58,8 +44,6 @@ class CorrectID : ComponentActivity() {
         } else {
             loadSpeciesData(speciesTag)
         }
-
-        inactivityHandler = Handler(Looper.getMainLooper())
 
     }
 
@@ -122,26 +106,6 @@ class CorrectID : ComponentActivity() {
             Log.e("CorrectID", "URL no válida o no encontrada: $imageUrl")
             speciesImage.setImageResource(R.drawable.image_not_found)
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        inactivityHandler?.removeCallbacks(inactivityRunnable)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        inactivityHandler?.postDelayed(inactivityRunnable, inactivityTimeout)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        inactivityHandler?.removeCallbacks(inactivityRunnable)
     }
 
 }
